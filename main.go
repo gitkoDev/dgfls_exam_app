@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"math/rand"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -31,9 +33,15 @@ var originalQuestions = `- Can you think of a really boring hobby?
 
 var allQuestions = strings.Split(originalQuestions, "\n")
 
-var questionSets [25][3]string
+// var questionSets [25][3]string
+
+var questionSets [][]string
+var papersNum int
+var questionsNum int
 
 func main() {
+	getUserInput()
+
 	populateQuestionPapers()
 
 	writeToFile()
@@ -42,41 +50,36 @@ func main() {
 
 func populateQuestionPapers() {
 	// Populate question sets with random questions
-	for outerIndex := 0; outerIndex < 25; outerIndex++ {
+	// Outer index = papers, inner index = questions in each consequtive paper
+	for outerIndex := 0; outerIndex < papersNum; outerIndex++ {
+		questionSets = append(questionSets, []string{})
 		for innerIndex := 0; innerIndex < 3; innerIndex++ {
-			fmt.Println("inner index:", innerIndex)
 			randQuestion := allQuestions[rand.Intn(len(allQuestions))]
+			// Check for doubles inside the paper before appending
 			for _, q := range questionSets[outerIndex] {
 
 				if q == randQuestion {
 					// log.Fatalln("repeat found")
-					fmt.Printf("repeat found. previous index: %d. current index %d", innerIndex, innerIndex-1)
+					fmt.Println(q, randQuestion)
+					fmt.Printf("repeat found in paper %d. previous index: %d. current index %d", outerIndex+1, innerIndex, innerIndex-1)
 					innerIndex = innerIndex - 1
 					continue
 				}
 
 			}
-
-			questionSets[outerIndex][innerIndex] = randQuestion
-
+			questionSets[outerIndex] = append(questionSets[outerIndex], randQuestion)
 		}
 	}
 
-	// for i, q := range questionSets {
-	// 	fmt.Printf("paper number %d", i+1)
-	// 	for _, sq := range q {
-	// 		// fmt.Println(sq)
-	// 	}
-	// }
 }
 
 func writeToFile() {
 	file, err := os.Create("questions.txt")
-	defer file.Close()
 	if err != nil {
 		fmt.Println("error opening the file", err)
 	} else {
-		for outerIndex := 0; outerIndex < 25; outerIndex++ {
+		defer file.Close()
+		for outerIndex := 0; outerIndex < papersNum; outerIndex++ {
 			headerString := fmt.Sprintf("----------Paper number %d----------\n", outerIndex+1)
 			_, err := file.WriteString(headerString)
 			if err != nil {
@@ -94,6 +97,38 @@ func writeToFile() {
 	}
 }
 
-func checkForDoubles() {
+// func checkForDoubles() {
+
+// }
+
+func getQuestionsNum() {
+
+}
+
+func getUserInput() {
+	// The loop keeps going until we get a valid input from the user. When we do, we return from the function
+	for {
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Println("How many papers to create?")
+		input, _ := reader.ReadString('\n')
+		input = strings.Trim(input, "\n")
+
+		parsedNum, err := strconv.Atoi(input)
+		// We want to get a positive number, so even if it's an int, we need to make sure it's positive and not equal to zero
+		if err != nil || parsedNum <= 0 {
+			fmt.Println("----------------")
+			fmt.Println("Please enter a valid positive number of papers")
+			continue
+		}
+
+		fmt.Println("----------------")
+		if parsedNum == 1 {
+			fmt.Println("Generating 1 paper")
+		} else {
+			fmt.Printf("Generating %d papers\n", parsedNum)
+		}
+		papersNum = parsedNum
+		return
+	}
 
 }
