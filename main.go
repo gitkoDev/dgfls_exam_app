@@ -3,10 +3,13 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"math/rand"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/fumiama/go-docx"
 )
 
 var originalQuestions = `- Can you think of a really boring hobby?
@@ -63,8 +66,8 @@ func populateQuestionPapers() {
 
 				if q == randQuestion {
 					// log.Fatalln("repeat found")
-					fmt.Println(q, randQuestion)
-					fmt.Printf("repeat found in paper %d. previous index: %d. current index %d\n", outerIndex+1, innerIndex, innerIndex-1)
+					// fmt.Println(q, randQuestion)
+					fmt.Printf("repeat found in paper %d\n", outerIndex+1)
 					innerIndex = innerIndex - 1
 					continue
 				}
@@ -77,28 +80,35 @@ func populateQuestionPapers() {
 }
 
 func writeToFile() {
-	file, err := os.Create("questions.txt")
+	file, err := os.Create("questions.docx")
 	if err != nil {
-		fmt.Println("error opening the file", err)
-	} else {
-		defer file.Close()
-		for outerIndex := 0; outerIndex < papersNum; outerIndex++ {
-			headerString := fmt.Sprintf("----------Paper number %d----------\n", outerIndex+1)
-			_, err := file.WriteString(headerString)
-			if err != nil {
-				fmt.Println(err, "here")
-			}
-			for innerIndex := 0; innerIndex < questionsNum; innerIndex++ {
-				questionString := fmt.Sprintf("%d. %v\n", innerIndex+1, questionSets[outerIndex][innerIndex])
-				_, err := file.WriteString(questionString)
-
-				if err != nil {
-					fmt.Println(err, "HERE")
-				}
-			}
-		}
-		fmt.Printf("Done! %d papers with %d questions in each one are ready. Get the results in the txt file\n", papersNum, questionsNum)
+		log.Fatalln(err)
 	}
+
+	cont := docx.NewA4()
+
+	defer file.Close()
+	for outerIndex := 0; outerIndex < papersNum; outerIndex++ {
+		headerString := fmt.Sprintf("----------Paper number %d----------\n", outerIndex+1)
+		parag := cont.AddParagraph().Justification("center")
+		parag.AddText(headerString).Size("40").Bold().Font("Arial", "Arial", "Arial")
+
+		for innerIndex := 0; innerIndex < questionsNum; innerIndex++ {
+			questionString := fmt.Sprintf("%d. %v\n", innerIndex+1, questionSets[outerIndex][innerIndex])
+			parag := cont.AddParagraph()
+			parag.AddText(questionString).Size("30").Font("Arial", "Arial", "Arial")
+
+		}
+		cont.AddParagraph()
+		cont.AddParagraph()
+	}
+
+	_, err = cont.WriteTo(file)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Printf("Done! %d papers with %d questions in each one are ready. Get the results in the txt file\n", papersNum, questionsNum)
+
 }
 
 // func checkForDoubles() {
