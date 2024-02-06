@@ -31,9 +31,12 @@ var originalQuestions = `- Can you think of a really boring hobby?
 	- What is the best way to cook eggs? Describe the steps
 	- How often do you cook? Do you mostly cook breakfast, lunch or dinner?`
 
-var allQuestions = strings.Split(originalQuestions, "\n")
+const (
+	Papers    = "papers"
+	Questions = "questions"
+)
 
-// var questionSets [25][3]string
+var allQuestions = strings.Split(originalQuestions, "\n")
 
 var questionSets [][]string
 var papersNum int
@@ -53,7 +56,7 @@ func populateQuestionPapers() {
 	// Outer index = papers, inner index = questions in each consequtive paper
 	for outerIndex := 0; outerIndex < papersNum; outerIndex++ {
 		questionSets = append(questionSets, []string{})
-		for innerIndex := 0; innerIndex < 3; innerIndex++ {
+		for innerIndex := 0; innerIndex < questionsNum; innerIndex++ {
 			randQuestion := allQuestions[rand.Intn(len(allQuestions))]
 			// Check for doubles inside the paper before appending
 			for _, q := range questionSets[outerIndex] {
@@ -61,7 +64,7 @@ func populateQuestionPapers() {
 				if q == randQuestion {
 					// log.Fatalln("repeat found")
 					fmt.Println(q, randQuestion)
-					fmt.Printf("repeat found in paper %d. previous index: %d. current index %d", outerIndex+1, innerIndex, innerIndex-1)
+					fmt.Printf("repeat found in paper %d. previous index: %d. current index %d\n", outerIndex+1, innerIndex, innerIndex-1)
 					innerIndex = innerIndex - 1
 					continue
 				}
@@ -85,7 +88,7 @@ func writeToFile() {
 			if err != nil {
 				fmt.Println(err, "here")
 			}
-			for innerIndex := 0; innerIndex < 3; innerIndex++ {
+			for innerIndex := 0; innerIndex < questionsNum; innerIndex++ {
 				questionString := fmt.Sprintf("%d. %v\n", innerIndex+1, questionSets[outerIndex][innerIndex])
 				_, err := file.WriteString(questionString)
 
@@ -94,6 +97,7 @@ func writeToFile() {
 				}
 			}
 		}
+		fmt.Printf("Done! %d papers with %d questions in each one are ready. Get the results in the txt file\n", papersNum, questionsNum)
 	}
 }
 
@@ -106,10 +110,20 @@ func getQuestionsNum() {
 }
 
 func getUserInput() {
+	papersNum = parseUserInput(Papers)
+	questionsNum = parseUserInput(Questions)
+}
+
+func parseUserInput(valueToParse string) int {
 	// The loop keeps going until we get a valid input from the user. When we do, we return from the function
 	for {
 		reader := bufio.NewReader(os.Stdin)
-		fmt.Println("How many papers to create?")
+		// Different message depending on whether we want the user to input amount of papers or questions in each paper
+		if valueToParse == Papers {
+			fmt.Println("How many papers to create?")
+		} else if valueToParse == Questions {
+			fmt.Println("How many questions in each paper?")
+		}
 		input, _ := reader.ReadString('\n')
 		input = strings.Trim(input, "\n")
 
@@ -117,18 +131,13 @@ func getUserInput() {
 		// We want to get a positive number, so even if it's an int, we need to make sure it's positive and not equal to zero
 		if err != nil || parsedNum <= 0 {
 			fmt.Println("----------------")
-			fmt.Println("Please enter a valid positive number of papers")
+			// Different message depending on whether we want the user to input amount of papers or questions in each paper
+			fmt.Printf("Please enter a valid positive number of %s\n", valueToParse)
 			continue
 		}
 
 		fmt.Println("----------------")
-		if parsedNum == 1 {
-			fmt.Println("Generating 1 paper")
-		} else {
-			fmt.Printf("Generating %d papers\n", parsedNum)
-		}
-		papersNum = parsedNum
-		return
+		return parsedNum
 	}
 
 }
