@@ -60,18 +60,18 @@ func populateQuestionPapers() {
 	for outerIndex := 0; outerIndex < papersNum; outerIndex++ {
 		questionSets = append(questionSets, []string{})
 		for innerIndex := 0; innerIndex < questionsNum; innerIndex++ {
+			doubleFound := false
+
 			randQuestion := allQuestions[rand.Intn(len(allQuestions))]
 			// Check for doubles inside the paper before appending
 			for _, q := range questionSets[outerIndex] {
-
 				if q == randQuestion {
-					// log.Fatalln("repeat found")
-					// fmt.Println(q, randQuestion)
-					fmt.Printf("repeat found in paper %d\n", outerIndex+1)
+					doubleFound = true
 					innerIndex = innerIndex - 1
-					continue
 				}
-
+			}
+			if doubleFound {
+				continue
 			}
 			questionSets[outerIndex] = append(questionSets[outerIndex], randQuestion)
 		}
@@ -111,11 +111,7 @@ func writeToFile() {
 
 }
 
-// func checkForDoubles() {
-
-// }
-
-func getQuestionsNum() {
+func checkForDoubles() {
 
 }
 
