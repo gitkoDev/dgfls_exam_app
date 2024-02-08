@@ -1,4 +1,4 @@
-module github.com/gitkoDev/dgfls_exam_app
+module github.com/gitkoDev/test-paper-generator
 
 go 1.21.5
 

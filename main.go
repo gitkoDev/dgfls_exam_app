@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/gitkoDev/dgfls_exam_app/utils"
+	"github.com/gitkoDev/test-paper-generator/utils"
 )
 
 func main() {
