@@ -14,6 +14,8 @@ func init() {
 }
 
 func main() {
+	utils.Onboarding()
+
 	utils.ParseQuestions()
 
 	utils.GetUserInput()

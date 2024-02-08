@@ -1,17 +1,4 @@
-`- Can you think of a really boring hobby?
-// 	- Why do you think it's important to have a hobby?
-// 	- Do you think having lots of hobbies is bad?
-// 	- What hobbies do your family members have?
-// 	- Do you prefer indoor or outdoor hobbies and why?
-// 	- How often do you leave Dongguan?
-// 	- What do you usually enjoy eating when you’re sad?
-// 	- How often do you watch movies?
-// 	-  What kind of food have you never eaten before?
-// 	- What do you think is more difficult, learning a new language or a musical instrument, and why do you think so?
-// 	- Which season (time of the year) do you think is the best? Why?
-// 	- Is your hometown colder than Dongguan? How are they different?
-// 	- What is the most beautiful city you have ever visited?
-// 	- What is your dream job? Why?
+/ 	- What is your dream job? Why?
 // 	- What do you think is the most boring job? Why?
 // 	- When you get a job, how much money would you like to earn?
 // 	- What kind of job do you think is better: part-time or full time? Why?

@@ -48,36 +48,53 @@ var questionSets [][]string
 var papersNum int
 var questionsNum int
 
+// Step 0: explain to user how program works
+
+func Onboarding() {
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Println("----------------")
+	fmt.Println("This program will help you generate random test papers with the questions you provide. Please ENTER to proceed")
+	reader.ReadString('\n')
+	fmt.Println("First, make sure to put your questions into 'put-your-questions-here' txt file in the folder. Each question should be put on a new line")
+	reader.ReadString('\n')
+}
+
 // Step 1: Get user's questions
 
 func ParseQuestions() {
-	_, err := os.Stat("put-your-questions-here.txt")
-	if err != nil {
-		os.Create("put-your-questions-here.txt")
+	// The loop only ends when the user provides questions to the txt file. No questions = no moving forward
+	for {
+		file, err := os.Open("put-your-questions-here.txt")
+		if err != nil {
+			log.Fatalln("error opening file with user's questions:\n", err)
+		}
+
+		defer file.Close()
+
+		content, err := io.ReadAll(file)
+		if err != nil {
+			log.Fatalln("error reading file with user's questions:\n", err)
+		}
+
+		originalQuestions = string(content)
+
+		parsedQuestions = strings.Split(originalQuestions, "\n")
+
+		if len(parsedQuestions) <= 1 {
+			fmt.Println("Please provide more questions to the txt file in the folder. Press ENTER where you're ready")
+
+			reader := bufio.NewReader(os.Stdin)
+			reader.ReadString('\n')
+			continue
+		} else {
+			fmt.Printf("%d questions detected\n", len(parsedQuestions))
+			fmt.Println("----------------")
+			return
+		}
+
 	}
 
-	file, err := os.Open("put-your-questions-here.txt")
-	if err != nil {
-		log.Fatalln("error opening file with user's questions:\n", err)
-	}
-
-	defer file.Close()
-
-	content, err := io.ReadAll(file)
-	if err != nil {
-		log.Fatalln("error reading file with user's questions:\n", err)
-	}
-
-	originalQuestions = string(content)
-
-	parsedQuestions = strings.Split(originalQuestions, "\n")
-
-	if len(parsedQuestions) <= 1 {
-		log.Fatalln("Please provide more questions")
-	}
-
-	fmt.Printf("%d questions detected\n", len(parsedQuestions))
-	fmt.Println("----------------")
 }
 
 // Step 2: get user input - how many papers and questions in each paper
@@ -105,7 +122,7 @@ func parseUserInput(valueToParse string) int {
 			fmt.Println("----------------")
 			// The number of questions in each paper should not be greater than total number of questions provided by user
 			fmt.Printf("You have only provided %d questions. Please make sure the number of questions in each paper is equal or less than that\n", len(parsedQuestions))
-			os.Exit(0)
+			continue
 		}
 
 		// We want to get a positive number, so even if it's an int, we need to make sure it's positive and not equal to zero
