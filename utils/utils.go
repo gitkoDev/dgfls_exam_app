@@ -13,27 +13,27 @@ import (
 	"github.com/fumiama/go-docx"
 )
 
-var testQ = `- Can you think of a really boring hobby?
-	- Why do you think it's important to have a hobby?
-	- Do you think having lots of hobbies is bad?
-	- What hobbies do your family members have?
-	- Do you prefer indoor or outdoor hobbies and why?
-	- How often do you leave Dongguan?
-	- What do you usually enjoy eating when you’re sad?
-	- How often do you watch movies?
-	-  What kind of food have you never eaten before?
-	- What do you think is more difficult, learning a new language or a musical instrument, and why do you think so?
-	- Which season (time of the year) do you think is the best? Why? 
-	- Is your hometown colder than Dongguan? How are they different?
-	- What is the most beautiful city you have ever visited?
-	- What is your dream job? Why?
-	- What do you think is the most boring job? Why?
-	- When you get a job, how much money would you like to earn?
-	- What kind of job do you think is better: part-time or full time? Why?
-	- What dishes can you cook? What is your best one?
-	- Who do you think cooks the most delicious food?
-	- What is the best way to cook eggs? Describe the steps
-	- How often do you cook? Do you mostly cook breakfast, lunch or dinner?`
+// var testQ = `- Can you think of a really boring hobby?
+// 	- Why do you think it's important to have a hobby?
+// 	- Do you think having lots of hobbies is bad?
+// 	- What hobbies do your family members have?
+// 	- Do you prefer indoor or outdoor hobbies and why?
+// 	- How often do you leave Dongguan?
+// 	- What do you usually enjoy eating when you’re sad?
+// 	- How often do you watch movies?
+// 	-  What kind of food have you never eaten before?
+// 	- What do you think is more difficult, learning a new language or a musical instrument, and why do you think so?
+// 	- Which season (time of the year) do you think is the best? Why?
+// 	- Is your hometown colder than Dongguan? How are they different?
+// 	- What is the most beautiful city you have ever visited?
+// 	- What is your dream job? Why?
+// 	- What do you think is the most boring job? Why?
+// 	- When you get a job, how much money would you like to earn?
+// 	- What kind of job do you think is better: part-time or full time? Why?
+// 	- What dishes can you cook? What is your best one?
+// 	- Who do you think cooks the most delicious food?
+// 	- What is the best way to cook eggs? Describe the steps
+// 	- How often do you cook? Do you mostly cook breakfast, lunch or dinner?`
 
 var originalQuestions string
 
@@ -48,6 +48,8 @@ var questionSets [][]string
 var papersNum int
 var questionsNum int
 
+// Step 1: Get user's questions
+
 func ParseQuestions() {
 	_, err := os.Stat("put-your-questions-here.txt")
 	if err != nil {
@@ -55,7 +57,6 @@ func ParseQuestions() {
 	}
 
 	file, err := os.Open("put-your-questions-here.txt")
-
 	if err != nil {
 		log.Fatalln("error opening file with user's questions:\n", err)
 	}
@@ -63,7 +64,6 @@ func ParseQuestions() {
 	defer file.Close()
 
 	content, err := io.ReadAll(file)
-
 	if err != nil {
 		log.Fatalln("error reading file with user's questions:\n", err)
 	}
@@ -72,9 +72,15 @@ func ParseQuestions() {
 
 	parsedQuestions = strings.Split(originalQuestions, "\n")
 
+	if len(parsedQuestions) <= 1 {
+		log.Fatalln("Please provide more questions")
+	}
+
 	fmt.Printf("%d questions detected\n", len(parsedQuestions))
 	fmt.Println("----------------")
 }
+
+// Step 2: get user input - how many papers and questions in each paper
 
 func GetUserInput() {
 	papersNum = parseUserInput(Papers)
@@ -82,7 +88,6 @@ func GetUserInput() {
 }
 
 func parseUserInput(valueToParse string) int {
-	// The loop keeps going until we get a valid input from the user. When we do, we return from the function
 	for {
 		reader := bufio.NewReader(os.Stdin)
 		// Different message depending on whether we want the user to input amount of papers or questions in each paper
@@ -95,6 +100,14 @@ func parseUserInput(valueToParse string) int {
 		input = strings.Trim(input, "\n")
 
 		parsedNum, err := strconv.Atoi(input)
+
+		if valueToParse == Questions && parsedNum > len(parsedQuestions) {
+			fmt.Println("----------------")
+			// The number of questions in each paper should not be greater than total number of questions provided by user
+			fmt.Printf("You have only provided %d questions. Please make sure the number of questions in each paper is equal or less than that\n", len(parsedQuestions))
+			os.Exit(0)
+		}
+
 		// We want to get a positive number, so even if it's an int, we need to make sure it's positive and not equal to zero
 		if err != nil || parsedNum <= 0 {
 			fmt.Println("----------------")
@@ -108,8 +121,9 @@ func parseUserInput(valueToParse string) int {
 	}
 }
 
+// Step 3: populate question sets with data provided by user
+
 func PopulateQuestionPapers() {
-	// Populate question sets with random questions
 	// Outer index = papers, inner index = questions in each consequtive paper
 	for outerIndex := 0; outerIndex < papersNum; outerIndex++ {
 		questionSets = append(questionSets, []string{})
@@ -130,8 +144,9 @@ func PopulateQuestionPapers() {
 			questionSets[outerIndex] = append(questionSets[outerIndex], randQuestion)
 		}
 	}
-
 }
+
+// Step 4: write to file
 
 func WriteToFile() {
 	file, err := os.Create("questions.docx")
