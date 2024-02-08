@@ -3,6 +3,7 @@ package utils
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"math/rand"
 	"os"
@@ -12,7 +13,7 @@ import (
 	"github.com/fumiama/go-docx"
 )
 
-var originalQuestions = `- Can you think of a really boring hobby?
+var testQ = `- Can you think of a really boring hobby?
 	- Why do you think it's important to have a hobby?
 	- Do you think having lots of hobbies is bad?
 	- What hobbies do your family members have?
@@ -34,16 +35,78 @@ var originalQuestions = `- Can you think of a really boring hobby?
 	- What is the best way to cook eggs? Describe the steps
 	- How often do you cook? Do you mostly cook breakfast, lunch or dinner?`
 
+var originalQuestions string
+
+var parsedQuestions []string
+
 const (
 	Papers    = "papers"
 	Questions = "questions"
 )
 
-var allQuestions = strings.Split(originalQuestions, "\n")
-
 var questionSets [][]string
 var papersNum int
 var questionsNum int
+
+func ParseQuestions() {
+	_, err := os.Stat("put-your-questions-here.txt")
+	if err != nil {
+		os.Create("put-your-questions-here.txt")
+	}
+
+	file, err := os.Open("put-your-questions-here.txt")
+
+	if err != nil {
+		log.Fatalln("error opening file with user's questions:\n", err)
+	}
+
+	defer file.Close()
+
+	content, err := io.ReadAll(file)
+
+	if err != nil {
+		log.Fatalln("error reading file with user's questions:\n", err)
+	}
+
+	originalQuestions = string(content)
+
+	parsedQuestions = strings.Split(originalQuestions, "\n")
+
+	fmt.Printf("%d questions detected\n", len(parsedQuestions))
+	fmt.Println("----------------")
+}
+
+func GetUserInput() {
+	papersNum = parseUserInput(Papers)
+	questionsNum = parseUserInput(Questions)
+}
+
+func parseUserInput(valueToParse string) int {
+	// The loop keeps going until we get a valid input from the user. When we do, we return from the function
+	for {
+		reader := bufio.NewReader(os.Stdin)
+		// Different message depending on whether we want the user to input amount of papers or questions in each paper
+		if valueToParse == Papers {
+			fmt.Println("How many papers to create?")
+		} else if valueToParse == Questions {
+			fmt.Println("How many questions in each paper?")
+		}
+		input, _ := reader.ReadString('\n')
+		input = strings.Trim(input, "\n")
+
+		parsedNum, err := strconv.Atoi(input)
+		// We want to get a positive number, so even if it's an int, we need to make sure it's positive and not equal to zero
+		if err != nil || parsedNum <= 0 {
+			fmt.Println("----------------")
+			// Different message depending on whether we want the user to input amount of papers or questions in each paper
+			fmt.Printf("Please enter a valid positive number of %s\n", valueToParse)
+			continue
+		}
+
+		fmt.Println("----------------")
+		return parsedNum
+	}
+}
 
 func PopulateQuestionPapers() {
 	// Populate question sets with random questions
@@ -53,7 +116,7 @@ func PopulateQuestionPapers() {
 		for innerIndex := 0; innerIndex < questionsNum; innerIndex++ {
 			doubleFound := false
 
-			randQuestion := allQuestions[rand.Intn(len(allQuestions))]
+			randQuestion := parsedQuestions[rand.Intn(len(parsedQuestions))]
 			// Check for doubles inside the paper before appending
 			for _, q := range questionSets[outerIndex] {
 				if q == randQuestion {
@@ -99,42 +162,5 @@ func WriteToFile() {
 		log.Fatalln(err)
 	}
 	fmt.Printf("Done! %d papers with %d questions in each one are ready. Get the results in the txt file\n", papersNum, questionsNum)
-
-}
-
-func checkForDoubles() {
-
-}
-
-func GetUserInput() {
-	papersNum = parseUserInput(Papers)
-	questionsNum = parseUserInput(Questions)
-}
-
-func parseUserInput(valueToParse string) int {
-	// The loop keeps going until we get a valid input from the user. When we do, we return from the function
-	for {
-		reader := bufio.NewReader(os.Stdin)
-		// Different message depending on whether we want the user to input amount of papers or questions in each paper
-		if valueToParse == Papers {
-			fmt.Println("How many papers to create?")
-		} else if valueToParse == Questions {
-			fmt.Println("How many questions in each paper?")
-		}
-		input, _ := reader.ReadString('\n')
-		input = strings.Trim(input, "\n")
-
-		parsedNum, err := strconv.Atoi(input)
-		// We want to get a positive number, so even if it's an int, we need to make sure it's positive and not equal to zero
-		if err != nil || parsedNum <= 0 {
-			fmt.Println("----------------")
-			// Different message depending on whether we want the user to input amount of papers or questions in each paper
-			fmt.Printf("Please enter a valid positive number of %s\n", valueToParse)
-			continue
-		}
-
-		fmt.Println("----------------")
-		return parsedNum
-	}
 
 }

@@ -5,6 +5,8 @@ import (
 )
 
 func main() {
+	utils.ParseQuestions()
+
 	utils.GetUserInput()
 
 	utils.PopulateQuestionPapers()
