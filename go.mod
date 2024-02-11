@@ -1,4 +1,4 @@
-module github.com/gitkoDev/test-paper-generator
+module github.com/gitkoDev/exam-paper-generator
 
 go 1.21.5
 

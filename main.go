@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/gitkoDev/test-paper-generator/utils"
+	"github.com/gitkoDev/exam-paper-generator/utils"
 )
 
 func init() {
@@ -18,10 +18,10 @@ func main() {
 
 	utils.ParseQuestions()
 
-	// utils.GetUserInput()
+	utils.GetUserInput()
 
-	// utils.PopulateQuestionPapers()
+	utils.PopulateQuestionPapers()
 
-	// utils.WriteToFile()
+	utils.WriteToFile()
 
 }
