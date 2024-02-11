@@ -10,10 +10,9 @@ The process to use the tool is pretty simple:
 
 1. Place your questions separated by new lines into the `put-your-questions-here.txt`  file. 
 2. If the file is not present, it will be recreated at runtime, so refer to **step 3**.
-3. Run the executive `test-paper-generator` file in the folder.
+3. Run the executive `test-paper-generator` file in `bin` the folder.
 4. Enter the amount of required test papers and questions in each paper.
 5. Get your output in the resulting `questions.docx`  file
-
 
 ## Input example
 

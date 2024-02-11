@@ -127,7 +127,7 @@ func parseUserInput(valueToParse string) int {
 			fmt.Println("How many questions in each paper?")
 		}
 		input, _ := reader.ReadString('\n')
-		input = strings.Trim(input, "\n")
+		input = strings.Trim(input, "\n\r")
 
 		parsedNum, err := strconv.Atoi(input)
 
