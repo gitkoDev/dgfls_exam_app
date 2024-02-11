@@ -1,5 +1,15 @@
 # ESL Exam Paper Generator
 
+> Tools used:
+
+![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white)
+<a href="https://github.com/fumiama/go-docx">
+<img src="https://img.shields.io/badge/Go-Docx-blue"/>
+</a>
+
+
+
+
 Exam paper generator is a tool to help you generate random exam papers with the questions you provide. This program can come in handy for ESL teachers looking to automate their exam/test preparation. It's also aimed at prevention of students copying each other's answers to the same questions. Unique paper = unique answers.
 
 This tool utilizes [go-docx](https://github.com/fumiama/go-docx) library to create a well-stuctured output in **docx** format.
