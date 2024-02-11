@@ -88,6 +88,9 @@ func ParseQuestions() {
 			reader.ReadString('\n')
 			continue
 		} else {
+			// Remove all empty lines before counting valid questions entered by user
+			parsedQuestions = checkForEmptyLines()
+
 			fmt.Printf("%d questions detected\n", len(parsedQuestions))
 			fmt.Println("----------------")
 			return
@@ -95,6 +98,16 @@ func ParseQuestions() {
 
 	}
 
+}
+
+func checkForEmptyLines() []string {
+	var resultingArr []string
+	for _, q := range parsedQuestions {
+		if q != "" {
+			resultingArr = append(resultingArr, q)
+		}
+	}
+	return resultingArr
 }
 
 // Step 2: get user input - how many papers and questions in each paper
@@ -194,5 +207,4 @@ func WriteToFile() {
 		log.Fatalln(err)
 	}
 	fmt.Printf("Done! %d papers with %d questions in each one are ready. Get the results in the txt file\n", papersNum, questionsNum)
-
 }

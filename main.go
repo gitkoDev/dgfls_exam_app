@@ -18,10 +18,10 @@ func main() {
 
 	utils.ParseQuestions()
 
-	utils.GetUserInput()
+	// utils.GetUserInput()
 
-	utils.PopulateQuestionPapers()
+	// utils.PopulateQuestionPapers()
 
-	utils.WriteToFile()
+	// utils.WriteToFile()
 
 }
