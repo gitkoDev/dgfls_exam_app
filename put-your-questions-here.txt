@@ -1,8 +1,11 @@
-/ 	- What is your dream job? Why?
-// 	- What do you think is the most boring job? Why?
-// 	- When you get a job, how much money would you like to earn?
-// 	- What kind of job do you think is better: part-time or full time? Why?
-// 	- What dishes can you cook? What is your best one?
-// 	- Who do you think cooks the most delicious food?
-// 	- What is the best way to cook eggs? Describe the steps
-// 	- How often do you cook? Do you mostly cook breakfast, lunch or dinner?`
+What kind of physical and mental preparation do you think is necessary for running a marathon?
+What are the benefits and drawbacks of modern art?
+What do you think we should do to start treating animals better?
+What topics do you think are best suited for podcasting?
+What do you think people like most about yoga?
+What age group do you think uses TikTok the most and why?
+Why do you think some people love Karaoke?
+Would you recommend your favourite movie to others? Why or why not?
+Do you think watching sports can bring people from different cultures together?
+How has technology changed the way schools operate compared to the past?
+If you could implement a new subject or course in schools, what would it be and why?

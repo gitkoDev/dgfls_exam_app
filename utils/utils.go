@@ -54,7 +54,7 @@ func Onboarding() {
 	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Println("----------------")
-	fmt.Println("This program will help you generate random test papers with the questions you provide. Please ENTER to proceed")
+	fmt.Println("This program will help you generate random exam papers with the questions you provide. Please ENTER to proceed")
 	reader.ReadString('\n')
 	fmt.Println("First, make sure to put your questions into 'put-your-questions-here' txt file in the folder. Each question should be put on a new line")
 	reader.ReadString('\n')
