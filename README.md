@@ -2,9 +2,15 @@
 
 Exam paper generator is a tool to help you generate random exam papers with the questions you provide. This program can come in handy for teachers looking to automate their exam/test preparation. It's also aimed at prevention of students copying each other's answers to the same questions. Unique paper = unique answers.
 
-This tool utilizes [go-docx](https://github.com/fumiama/go-docx) package to create a well-stuctured output
+This tool utilizes [go-docx](https://github.com/fumiama/go-docx) package to create a well-stuctured output:
 
-![alt text](output-example.jpg)
+## Input example
+
+<img src="./raw/input-example.jpg" alt="input example" width="500px"/>
+
+## Output example
+
+<img src=".raw/output-example.jpg" alt="output example" width="500px"/>
 
 # How it works
 
